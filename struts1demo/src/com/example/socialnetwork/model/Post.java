@@ -1,11 +1,14 @@
 package com.example.socialnetwork.model;
 
+import java.sql.Timestamp;
+
 public class Post {
     private int id;
     private String title;
     private String body;
     private int userId;
     private String status;
+    private Timestamp createdAt; // Thêm thuộc tính createdAt
 
     // Getters và Setters
     public int getId() { return id; }
@@ -18,4 +21,6 @@ public class Post {
     public void setUserId(int userId) { this.userId = userId; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }
