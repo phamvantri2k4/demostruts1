@@ -1,5 +1,4 @@
 package com.example.socialnetwork.dao;
-
 import com.example.socialnetwork.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

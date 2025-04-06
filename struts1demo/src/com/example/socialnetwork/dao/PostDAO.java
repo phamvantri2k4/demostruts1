@@ -1,5 +1,4 @@
 package com.example.socialnetwork.dao;
-
 import com.example.socialnetwork.model.Post;
 import com.example.socialnetwork.util.DBConnection;
 
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostDAO {
-
     // Tạo bài viết mới
     public void createPost(String title, String body, int userId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
@@ -22,7 +20,6 @@ public class PostDAO {
             stmt.executeUpdate();
         }
     }
-
     // Lấy danh sách bài viết của user
     public List<Post> getPostsByUserId(int userId) throws Exception {
         List<Post> posts = new ArrayList<>();
@@ -42,7 +39,6 @@ public class PostDAO {
         }
         return posts;
     }
-
     // Lấy bài viết theo ID và user_id
     public Post getPostByIdAndUserId(int postId, int userId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
@@ -61,7 +57,6 @@ public class PostDAO {
             return null;
         }
     }
-
     // Cập nhật bài viết
     public boolean updatePost(int postId, String title, String body, int userId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {

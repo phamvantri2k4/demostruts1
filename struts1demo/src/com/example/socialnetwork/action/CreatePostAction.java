@@ -43,3 +43,4 @@ public class CreatePostAction extends Action {
         return mapping.findForward("success");
     }
 }
+
