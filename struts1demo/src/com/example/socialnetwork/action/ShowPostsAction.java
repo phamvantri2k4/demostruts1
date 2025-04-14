@@ -1,8 +1,7 @@
 package com.example.socialnetwork.action;
 
-import com.example.socialnetwork.dao.UserDAO;
 import com.example.socialnetwork.dao.PostDAO;
-import com.example.socialnetwork.model.Post; // Sử dụng lớp Post từ package model
+import com.example.socialnetwork.model.Post;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -24,15 +23,8 @@ public class ShowPostsAction extends Action {
             return mapping.findForward("login");
         }
 
-        UserDAO userDAO = new UserDAO();
-        int userId = userDAO.getUserId(username);
-        if (userId == -1) {
-            request.setAttribute("error", "Người dùng không tồn tại!");
-            return mapping.findForward("failure");
-        }
-
         PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getPostsByUserId(userId);
+        List<Post> posts = postDAO.getAllPosts(); // Lấy tất cả bài viết
         request.setAttribute("posts", posts);
         return mapping.findForward("success");
     }

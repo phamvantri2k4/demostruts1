@@ -1,4 +1,5 @@
 package com.example.socialnetwork.dao;
+
 import com.example.socialnetwork.model.Post;
 import com.example.socialnetwork.util.DBConnection;
 
@@ -20,11 +21,16 @@ public class PostDAO {
             stmt.executeUpdate();
         }
     }
-    // Lấy danh sách bài viết của user
+
+    // Lấy danh sách bài viết của user, bao gồm username
     public List<Post> getPostsByUserId(int userId) throws Exception {
         List<Post> posts = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT id, title, body, created_at FROM posts WHERE user_id = ? AND status = 'published' ORDER BY created_at DESC";
+            String sql = "SELECT p.id, p.title, p.body, p.created_at, u.username " +
+                        "FROM posts p " +
+                        "JOIN users u ON p.user_id = u.id " +
+                        "WHERE p.user_id = ? AND p.status = 'published' " +
+                        "ORDER BY p.created_at DESC";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -33,16 +39,45 @@ public class PostDAO {
                 post.setId(rs.getInt("id"));
                 post.setTitle(rs.getString("title"));
                 post.setBody(rs.getString("body"));
-                post.setCreatedAt(rs.getTimestamp("created_at")); // Đã khớp với phương thức setCreatedAt
+                post.setCreatedAt(rs.getTimestamp("created_at"));
+                post.setUsername(rs.getString("username")); // Lấy username từ bảng users
                 posts.add(post);
             }
         }
         return posts;
     }
+
+    // Lấy tất cả bài viết (cho hiển thị như Facebook)
+    public List<Post> getAllPosts() throws Exception {
+        List<Post> posts = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT p.id, p.title, p.body, p.created_at, u.username " +
+                        "FROM posts p " +
+                        "JOIN users u ON p.user_id = u.id " +
+                        "WHERE p.status = 'published' " +
+                        "ORDER BY p.created_at DESC";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Post post = new Post();
+                post.setId(rs.getInt("id"));
+                post.setTitle(rs.getString("title"));
+                post.setBody(rs.getString("body"));
+                post.setCreatedAt(rs.getTimestamp("created_at"));
+                post.setUsername(rs.getString("username")); // Lấy username từ bảng users
+                posts.add(post);
+            }
+        }
+        return posts;
+    }
+
     // Lấy bài viết theo ID và user_id
     public Post getPostByIdAndUserId(int postId, int userId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT id, title, body FROM posts WHERE id = ? AND user_id = ?";
+            String sql = "SELECT p.id, p.title, p.body, u.username " +
+                        "FROM posts p " +
+                        "JOIN users u ON p.user_id = u.id " +
+                        "WHERE p.id = ? AND p.user_id = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, postId);
             stmt.setInt(2, userId);
@@ -52,11 +87,13 @@ public class PostDAO {
                 post.setId(rs.getInt("id"));
                 post.setTitle(rs.getString("title"));
                 post.setBody(rs.getString("body"));
+                post.setUsername(rs.getString("username"));
                 return post;
             }
             return null;
         }
     }
+
     // Cập nhật bài viết
     public boolean updatePost(int postId, String title, String body, int userId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {

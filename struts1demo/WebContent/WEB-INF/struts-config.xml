@@ -15,57 +15,55 @@
 
         <!-- Xử lý đăng nhập -->
         <action path="/doLogin" type="com.example.socialnetwork.action.LoginAction"
-        name="loginForm" input="/login.jsp">
-    	<forward name="success" path="/showPosts.do"/>
-    	<forward name="failure" path="/login.jsp"/>
-		</action>
+                name="loginForm" input="/login.jsp">
+            <forward name="success" path="/index.do"/>
+            <forward name="failure" path="/login.jsp"/>
+        </action>
 
         <!-- Hiển thị trang đăng ký -->
-       <action path="/register" forward="/register.jsp"/>
+        <action path="/register" forward="/register.jsp"/>
 
-<action path="/doRegister" type="com.example.socialnetwork.action.RegisterAction"
-        name="registrationForm" input="/register.jsp">
-    <forward name="success" path="/login.do"/>
-    <forward name="failure" path="/register.jsp"/>
-</action>
+        <!-- Xử lý đăng ký -->
+        <action path="/doRegister" type="com.example.socialnetwork.action.RegisterAction"
+                name="registrationForm" input="/register.jsp">
+            <forward name="success" path="/login.do"/>
+            <forward name="failure" path="/register.jsp"/>
+        </action>
 
-        <!-- Hiển thị trang tạo bài post -->
-        <action path="/createPost" forward="/createPost.jsp"/>
-
-        <!-- Xử lý tạo bài post -->
-        <action path="/doCreatePost" type="com.example.socialnetwork.action.CreatePostAction"
-                name="postForm" input="/createPost.jsp">
-            <forward name="success" path="/showPosts.do"/>
-            <forward name="failure" path="/createPost.jsp"/>
+        <!-- Hiển thị trang index (gộp form đăng bài và danh sách bài viết) -->
+        <action path="/index" type="com.example.socialnetwork.action.ShowPostsAction"
+                input="/index.jsp">
+            <forward name="success" path="/index.jsp"/>
+            <forward name="failure" path="/login.jsp"/>
             <forward name="login" path="/login.jsp"/>
         </action>
 
-        <!-- Hiển thị danh sách bài post -->
-        <action path="/showPosts" type="com.example.socialnetwork.action.ShowPostsAction"
-                input="/showPosts.jsp">
-            <forward name="success" path="/showPosts.jsp"/>
-            <forward name="failure" path="/login.jsp"/>
+        <!-- Xử lý tạo bài post -->
+        <action path="/doCreatePost" type="com.example.socialnetwork.action.CreatePostAction"
+                name="postForm" input="/index.jsp">
+            <forward name="success" path="/index.do"/>
+            <forward name="failure" path="/index.jsp"/>
             <forward name="login" path="/login.jsp"/>
         </action>
 
         <!-- Xử lý xóa bài post -->
         <action path="/deletePost" type="com.example.socialnetwork.action.DeletePostAction">
-            <forward name="success" path="/showPosts.do"/>
-            <forward name="failure" path="/showPosts.do"/>
+            <forward name="success" path="/index.do"/>
+            <forward name="failure" path="/index.do"/>
             <forward name="login" path="/login.jsp"/>
         </action>
 
         <!-- Hiển thị form sửa bài post -->
         <action path="/editPost" type="com.example.socialnetwork.action.EditPostAction">
             <forward name="edit" path="/editPost.jsp"/>
-            <forward name="failure" path="/showPosts.do"/>
+            <forward name="failure" path="/index.do"/>
             <forward name="login" path="/login.jsp"/>
         </action>
 
         <!-- Xử lý cập nhật bài post -->
         <action path="/updatePost" type="com.example.socialnetwork.action.UpdatePostAction"
                 name="postForm" input="/editPost.jsp">
-            <forward name="success" path="/showPosts.do"/>
+            <forward name="success" path="/index.do"/>
             <forward name="failure" path="/editPost.jsp"/>
             <forward name="login" path="/login.jsp"/>
         </action>

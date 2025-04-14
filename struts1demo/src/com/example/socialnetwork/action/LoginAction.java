@@ -19,15 +19,20 @@ public class LoginAction extends Action {
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 
+        // Kiểm tra input
         if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Tên đăng nhập và mật khẩu không được để trống!");
             return mapping.findForward("failure");
         }
 
+        // Kiểm tra thông tin đăng nhập
         UserDAO userDAO = new UserDAO();
         boolean isValid = userDAO.checkLogin(username, password);
         if (isValid) {
             HttpSession session = request.getSession();
+            // Đặt lại session để tránh trùng lặp
+            session.invalidate();
+            session = request.getSession(true);
             session.setAttribute("username", username);
             return mapping.findForward("success");
         } else {

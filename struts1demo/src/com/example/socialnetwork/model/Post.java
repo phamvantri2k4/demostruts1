@@ -9,6 +9,7 @@ public class Post {
     private int userId;
     private String status;
     private Timestamp createdAt; // Thêm thuộc tính createdAt
+    private String username;
 
     // Getters và Setters
     public int getId() { return id; }
@@ -23,4 +24,6 @@ public class Post {
     public void setStatus(String status) { this.status = status; }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 }

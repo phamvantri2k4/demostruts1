@@ -38,9 +38,10 @@ public class CreatePostAction extends Action {
             return mapping.findForward("failure");
         }
 
+        // Lưu bài viết vào database
         PostDAO postDAO = new PostDAO();
-        postDAO.createPost(title, body, userId);
+        postDAO.createPost(title, body, userId); // Gọi đúng phương thức createPost
+
         return mapping.findForward("success");
     }
 }
-
