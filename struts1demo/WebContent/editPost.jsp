@@ -13,6 +13,20 @@
     </script>
 </head>
 <body>
+    <div class="header">
+        <div class="header-left">
+            <a href="index.do" class="login-link">Trang chủ</a>
+        </div>
+        <div class="header-right">
+            <a href="profile.do" class="profile-link username-link" style="color: black; text-decoration: none; margin-right: 15px;">
+                ${sessionScope.username}
+            </a>
+            <a href="logout.do" class="logout-link" style="padding: 5px 10px; background: #dc3545; color: white; text-decoration: none; border-radius: 4px;">
+                Đăng xuất
+            </a>
+        </div>
+    </div>
+
     <div class="container">
         <h2>Sửa bài viết</h2>
         <div class="error-message">

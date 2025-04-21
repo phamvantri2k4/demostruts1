@@ -39,12 +39,10 @@
         </action>
 
         <!-- Xử lý tạo bài post -->
-        <action path="/doCreatePost" type="com.example.socialnetwork.action.CreatePostAction"
-                name="postForm" input="/index.jsp">
-            <forward name="success" path="/index.do"/>
-            <forward name="failure" path="/index.jsp"/>
-            <forward name="login" path="/login.jsp"/>
-        </action>
+        <action path="/doCreatePost" type="com.example.socialnetwork.action.CreatePostAction">
+    		<forward name="login" path="/login.jsp"/>
+    		<forward name="failure" path="/profile.jsp"/>
+		</action>
 
         <!-- Xử lý xóa bài post -->
         <action path="/deletePost" type="com.example.socialnetwork.action.DeletePostAction">
@@ -66,6 +64,25 @@
             <forward name="success" path="/index.do"/>
             <forward name="failure" path="/editPost.jsp"/>
             <forward name="login" path="/login.jsp"/>
+        </action>
+
+        <!-- Xử lý follow/unfollow -->
+        <action path="/follow" type="com.example.socialnetwork.action.FollowAction">
+            <forward name="success" path="/index.do"/>
+            <forward name="failure" path="/index.do"/>
+            <forward name="login" path="/login.jsp"/>
+        </action>
+
+        <!-- Hiển thị trang profile -->
+       <action path="/profile" type="com.example.socialnetwork.action.ProfileAction">
+    		<forward name="success" path="/profile.jsp"/>
+    		<forward name="failure" path="/index.do"/>
+   			<forward name="login" path="/login.jsp"/>
+	   </action>
+
+        <!-- Xử lý đăng xuất -->
+        <action path="/logout" type="com.example.socialnetwork.action.LogoutAction">
+            <forward name="success" path="/login.do"/>
         </action>
     </action-mappings>
 </struts-config>

@@ -1,31 +1,50 @@
 package com.example.socialnetwork.action;
 
-import com.example.socialnetwork.dao.PostDAO;
-import com.example.socialnetwork.model.Post;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import com.example.socialnetwork.dao.FollowDAO;
+import com.example.socialnetwork.dao.PostDAO;
+import com.example.socialnetwork.dao.UserDAO;
+import com.example.socialnetwork.model.User;
 import java.util.List;
 
 public class ShowPostsAction extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         if (username == null) {
-            request.setAttribute("error", "Vui lòng đăng nhập!");
             return mapping.findForward("login");
         }
 
+        UserDAO userDAO = new UserDAO();
         PostDAO postDAO = new PostDAO();
-        List<Post> posts = postDAO.getAllPosts(); // Lấy tất cả bài viết
-        request.setAttribute("posts", posts);
+        FollowDAO followDAO = new FollowDAO();
+
+        // Lấy thông tin người dùng hiện tại
+        User currentUser = userDAO.getUserByUsername(username);
+        if (currentUser == null) {
+            return mapping.findForward("login");
+        }
+
+        // Lấy danh sách tất cả bài viết
+        request.setAttribute("posts", postDAO.getAllPosts());
+
+        // Lấy danh sách tất cả người dùng và loại bỏ người dùng hiện tại
+        List<User> allUsers = userDAO.getAllUsers();
+        allUsers.removeIf(user -> user.getUsername().equals(username));
+        request.setAttribute("users", allUsers);
+
+        // Lấy danh sách người dùng mà người dùng hiện tại đang theo dõi
+        session.setAttribute("followedUsers", followDAO.getFollowedUsers(currentUser.getId()));
+
         return mapping.findForward("success");
     }
 }

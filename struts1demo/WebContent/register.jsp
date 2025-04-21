@@ -13,6 +13,7 @@
     </script>
 </head>
 <body>
+
     <div class="container">
         <h2>Đăng ký</h2>
         <div class="error-message">

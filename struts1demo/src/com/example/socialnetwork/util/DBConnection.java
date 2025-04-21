@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class DBConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/social_network";
-    private static final String USER = "root"; // Thay bằng username MySQL của bạn
-    private static final String PASSWORD = "251204"; // Thay bằng password MySQL của bạn
+    private static final String USER = "root";
+    private static final String PASSWORD = "251204";
 
     public static Connection getConnection() throws SQLException {
         try {

@@ -40,7 +40,7 @@ public class PostDAO {
                 post.setTitle(rs.getString("title"));
                 post.setBody(rs.getString("body"));
                 post.setCreatedAt(rs.getTimestamp("created_at"));
-                post.setUsername(rs.getString("username")); // Lấy username từ bảng users
+                post.setUsername(rs.getString("username"));
                 posts.add(post);
             }
         }
@@ -64,7 +64,7 @@ public class PostDAO {
                 post.setTitle(rs.getString("title"));
                 post.setBody(rs.getString("body"));
                 post.setCreatedAt(rs.getTimestamp("created_at"));
-                post.setUsername(rs.getString("username")); // Lấy username từ bảng users
+                post.setUsername(rs.getString("username"));
                 posts.add(post);
             }
         }
@@ -118,5 +118,19 @@ public class PostDAO {
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
+    }
+
+    // Đếm số bài viết của user
+    public int getPostCountByUserId(int userId) throws Exception {
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM posts WHERE user_id = ? AND status = 'published'";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        }
+        return 0;
     }
 }
