@@ -24,28 +24,45 @@ public class EditPostAction extends Action {
         }
 
         String postId = request.getParameter("id");
+        String source = request.getParameter("source"); // Lấy tham số source
         if (postId == null || postId.trim().isEmpty()) {
-            request.setAttribute("error", "Không tìm thấy bài viết!");
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Không tìm thấy bài viết!"); // Sử dụng session để lưu lỗi
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
         UserDAO userDAO = new UserDAO();
         int userId = userDAO.getUserId(username);
         if (userId == -1) {
-            request.setAttribute("error", "Người dùng không tồn tại!");
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Người dùng không tồn tại!");
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
         PostDAO postDAO = new PostDAO();
         Post post = postDAO.getPostByIdAndUserId(Integer.parseInt(postId), userId);
         if (post == null) {
-            request.setAttribute("error", "Bài viết không tồn tại hoặc không thuộc về bạn!");
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Bài viết không tồn tại hoặc không thuộc về bạn!");
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
         request.setAttribute("postId", post.getId());
         request.setAttribute("title", post.getTitle());
         request.setAttribute("body", post.getBody());
+        request.setAttribute("source", source); // Truyền source cho editPost.jsp
         return mapping.findForward("edit");
     }
 }

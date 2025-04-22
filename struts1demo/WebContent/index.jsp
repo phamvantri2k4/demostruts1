@@ -69,31 +69,30 @@
 
     <div class="container index-container">
         <div class="sidebar">
-            <h3>Danh sách người dùng</h3>
-            <c:if test="${empty users}">
-                <p>Không có người dùng nào.</p>
-            </c:if>
-            <c:if test="${not empty users}">
-                <ul>
-                    <c:forEach var="user" items="${users}">
-                        <li>
-                            <a href="profile.do?username=${user.username}" class="username-link">${user.username}</a>
-                            <c:set var="isFollowing" value="false"/>
-                            <c:forEach var="followedUser" items="${sessionScope.followedUsers}">
-                                <c:if test="${followedUser.id == user.id}">
-                                    <c:set var="isFollowing" value="true"/>
-                                </c:if>
-                            </c:forEach>
-                            <button class="follow-button ${isFollowing ? 'unfollow' : ''}" 
-                                    onclick="toggleFollow(this, '${user.username}', '${isFollowing ? 'unfollow' : 'follow'}')">
-                                ${isFollowing ? 'Hủy theo dõi' : 'Theo dõi'}
-                            </button>
-                        </li>
+    <h3>Danh sách người dùng</h3>
+    <c:if test="${empty users}">
+        <p>Không có người dùng nào.</p>
+    </c:if>
+    <c:if test="${not empty users}">
+        <ul>
+            <c:forEach var="user" items="${users}">
+                <li>
+                    <a href="profile.do?username=${user.username}">${user.username}</a>
+                    <c:set var="isFollowing" value="false"/>
+                    <c:forEach var="followedUser" items="${sessionScope.followedUsers}">
+                        <c:if test="${followedUser.id == user.id}">
+                            <c:set var="isFollowing" value="true"/>
+                        </c:if>
                     </c:forEach>
-                </ul>
-            </c:if>
-        </div>
-
+                    <button class="follow-button ${isFollowing ? 'unfollow' : ''}" 
+                            onclick="toggleFollow(this, '${user.username}', '${isFollowing ? 'unfollow' : 'follow'}')">
+                        ${isFollowing ? 'Hủy theo dõi' : 'Theo dõi'}
+                    </button>
+                </li>
+            </c:forEach>
+        </ul>
+    </c:if>
+</div>
         <div class="main-content">
             <div style="text-align: center; margin-bottom: 20px;">
                 <h2>Đăng bài</h2>
@@ -102,13 +101,14 @@
             <div class="error-message">
                 <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
             </div>
-            <div class="form-container">
-                <html:form action="/doCreatePost">
-                    <html:text property="title" value=""/>
-                    <html:textarea property="body" value=""/>
-                    <html:submit value="Đăng"/>
-                </html:form>
-            </div>
+           <div class="form-container">
+    		<html:form action="/doCreatePost">
+        	<html:hidden property="source" value="index"/>
+        	<html:text property="title" value=""/>
+        	<html:textarea property="body" value=""/>
+        	<html:submit value="Đăng"/>
+    		</html:form>
+		</div>
 
             <div class="post-list">
                 <c:if test="${empty posts}">
@@ -132,9 +132,9 @@
                                 <div class="action-menu" id="menu-${post.id}">
                                     <button class="menu-button" onclick="toggleMenu(${post.id})">⋮</button>
                                     <div class="dropdown">
-                                        <a href="editPost.do?id=${post.id}">Sửa</a>
-                                        <a href="deletePost.do?id=${post.id}" class="delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</a>
-                                    </div>
+    									<a href="editPost.do?id=${post.id}&source=index">Sửa</a>
+    									<a href="deletePost.do?id=${post.id}&source=index" class="delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</a>
+									</div>
                                 </div>
                             </c:if>
                         </div>

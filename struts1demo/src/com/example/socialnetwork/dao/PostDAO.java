@@ -11,16 +11,16 @@ import java.util.List;
 
 public class PostDAO {
     // Tạo bài viết mới
-    public void createPost(String title, String body, int userId) throws Exception {
-        try (Connection conn = DBConnection.getConnection()) {
-            String sql = "INSERT INTO posts (title, body, user_id, status, created_at) VALUES (?, ?, ?, 'published', CURRENT_TIMESTAMP)";
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, title);
-            stmt.setString(2, body);
-            stmt.setInt(3, userId);
-            stmt.executeUpdate();
-        }
-    }
+	public void createPost(String title, String body, int userId) throws Exception {
+	    try (Connection conn = DBConnection.getConnection()) {
+	        String sql = "INSERT INTO posts (title, body, user_id, status, created_at) VALUES (?, ?, ?, 'published', CURRENT_TIMESTAMP)";
+	        PreparedStatement stmt = conn.prepareStatement(sql);
+	        stmt.setString(1, title);
+	        stmt.setString(2, body);
+	        stmt.setInt(3, userId);
+	        stmt.executeUpdate();
+	    }
+	}
 
     // Lấy danh sách bài viết của user, bao gồm username
     public List<Post> getPostsByUserId(int userId) throws Exception {

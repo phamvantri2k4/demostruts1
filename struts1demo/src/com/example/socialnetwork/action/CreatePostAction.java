@@ -20,36 +20,53 @@ public class CreatePostAction extends Action {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         if (username == null) {
-            return mapping.findForward("login");
+            response.sendRedirect(request.getContextPath() + "/login.do");
+            return null;
         }
 
         UserDAO userDAO = new UserDAO();
         User currentUser = userDAO.getUserByUsername(username);
         if (currentUser == null) {
-            return mapping.findForward("login");
+            response.sendRedirect(request.getContextPath() + "/login.do");
+            return null;
         }
 
         PostForm postForm = (PostForm) form;
         String title = postForm.getTitle();
         String body = postForm.getBody();
+        String source = postForm.getSource();
 
         // Kiểm tra dữ liệu đầu vào
+        PostDAO postDAO = new PostDAO();
         if (title == null || title.trim().isEmpty() || body == null || body.trim().isEmpty()) {
-            request.setAttribute("error", "Tiêu đề và nội dung không được để trống!");
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Tiêu đề và nội dung không được để trống!");
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
         // Tạo bài viết
-        PostDAO postDAO = new PostDAO();
         try {
             postDAO.createPost(title, body, currentUser.getId());
         } catch (Exception e) {
-            request.setAttribute("error", "Có lỗi xảy ra khi đăng bài: " + e.getMessage());
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Có lỗi xảy ra khi đăng bài: " + e.getMessage());
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
-        // Redirect về profile.do để tránh POST lại khi refresh
-        response.sendRedirect(request.getContextPath() + "/profile.do");
+        // Redirect tùy theo nguồn gốc
+        if ("profile".equals(source)) {
+            response.sendRedirect(request.getContextPath() + "/profile.do");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/index.do");
+        }
         return null;
     }
 }

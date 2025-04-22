@@ -11,10 +11,10 @@ import java.util.List;
 
 public class UserDAO {
     // Kiểm tra đăng nhập
-    public boolean checkLogin(String username, String password) throws Exception {
-        try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+	public boolean checkLogin(String username, String password) throws Exception {
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -55,9 +55,9 @@ public class UserDAO {
     // Lấy danh sách tất cả người dùng
     public List<User> getAllUsers() throws Exception {
         List<User> users = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection()) {
-            String sql = "SELECT id, username FROM users";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        String sql = "SELECT * FROM users";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 User user = new User();
@@ -68,7 +68,6 @@ public class UserDAO {
         }
         return users;
     }
-
     // Kiểm tra xem user có đang theo dõi user khác không
     public boolean isFollowing(int followingUserId, int followedUserId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
@@ -151,4 +150,4 @@ public class UserDAO {
         }
         return null;
     }
-}
+ }

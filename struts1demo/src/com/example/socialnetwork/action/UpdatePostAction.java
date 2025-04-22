@@ -20,14 +20,15 @@ public class UpdatePostAction extends Action {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         if (username == null) {
-            request.setAttribute("error", "Vui lòng đăng nhập!");
-            return mapping.findForward("login");
+            response.sendRedirect(request.getContextPath() + "/login.do");
+            return null;
         }
 
         PostForm postForm = (PostForm) form;
         String postId = postForm.getId();
         String title = postForm.getTitle();
         String body = postForm.getBody();
+        String source = postForm.getSource(); // Lấy tham số source
 
         if (postId == null || postId.trim().isEmpty() || title == null || title.trim().isEmpty() || body == null || body.trim().isEmpty()) {
             request.setAttribute("error", "Dữ liệu không hợp lệ!");
@@ -37,8 +38,13 @@ public class UpdatePostAction extends Action {
         UserDAO userDAO = new UserDAO();
         int userId = userDAO.getUserId(username);
         if (userId == -1) {
-            request.setAttribute("error", "Người dùng không tồn tại!");
-            return mapping.findForward("failure");
+            session.setAttribute("error", "Người dùng không tồn tại!");
+            if ("profile".equals(source)) {
+                response.sendRedirect(request.getContextPath() + "/profile.do");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/index.do");
+            }
+            return null;
         }
 
         PostDAO postDAO = new PostDAO();
@@ -48,6 +54,12 @@ public class UpdatePostAction extends Action {
             return mapping.findForward("failure");
         }
 
-        return mapping.findForward("success");
+        // Redirect tùy theo nguồn gốc
+        if ("profile".equals(source)) {
+            response.sendRedirect(request.getContextPath() + "/profile.do");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/index.do");
+        }
+        return null;
     }
 }

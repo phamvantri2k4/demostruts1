@@ -1,40 +1,33 @@
 package com.example.socialnetwork.action;
 
-import com.example.socialnetwork.form.LoginForm;
-import com.example.socialnetwork.dao.UserDAO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import com.example.socialnetwork.dao.UserDAO;
+import com.example.socialnetwork.form.LoginForm;
 
 public class LoginAction extends Action {
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form,
-                                HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
         LoginForm loginForm = (LoginForm) form;
         String username = loginForm.getUsername();
         String password = loginForm.getPassword();
 
-        // Kiểm tra input
-        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            request.setAttribute("error", "Tên đăng nhập và mật khẩu không được để trống!");
-            return mapping.findForward("failure");
-        }
-
-        // Kiểm tra thông tin đăng nhập
         UserDAO userDAO = new UserDAO();
         boolean isValid = userDAO.checkLogin(username, password);
+
         if (isValid) {
             HttpSession session = request.getSession();
-            // Đặt lại session để tránh trùng lặp
-            session.invalidate();
-            session = request.getSession(true);
             session.setAttribute("username", username);
-            return mapping.findForward("success");
+            // Redirect thay vì forward
+            response.sendRedirect(request.getContextPath() + "/index.do");
+            return null;
         } else {
             request.setAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
             return mapping.findForward("failure");

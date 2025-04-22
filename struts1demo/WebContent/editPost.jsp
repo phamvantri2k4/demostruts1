@@ -35,11 +35,12 @@
         <div class="form-container">
             <html:form action="/updatePost">
                 <html:hidden property="id" value="${postId}"/>
+                <html:hidden property="source" value="${requestScope.source}"/> <!-- Truyền source -->
                 <html:text property="title" value="${title}"/>
                 <html:textarea property="body" value="${body}"/>
                 <html:submit value="Cập nhật"/>
             </html:form>
-            <a href="index.do" class="back-link">Quay lại danh sách bài viết</a>
+            <a href="${requestScope.source == 'profile' ? 'profile.do' : 'index.do'}" class="back-link">Quay lại</a>
         </div>
     </div>
 </body>

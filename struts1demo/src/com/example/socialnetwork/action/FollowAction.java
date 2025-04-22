@@ -25,13 +25,6 @@ public class FollowAction extends Action {
         String followedUsername = request.getParameter("followedUsername");
         String action = request.getParameter("action");
 
-        // Kiểm tra nếu người dùng tự theo dõi chính mình
-        if (currentUsername.equals(followedUsername)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Bạn không thể tự theo dõi chính mình!");
-            return null;
-        }
-
         UserDAO userDAO = new UserDAO();
         FollowDAO followDAO = new FollowDAO();
 
@@ -39,6 +32,12 @@ public class FollowAction extends Action {
         User followedUser = userDAO.getUserByUsername(followedUsername);
 
         if (currentUser == null || followedUser == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
+
+        // Ngăn người dùng tự theo dõi chính mình
+        if (currentUser.getId() == followedUser.getId()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }

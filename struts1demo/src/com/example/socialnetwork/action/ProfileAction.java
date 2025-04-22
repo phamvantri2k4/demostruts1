@@ -37,7 +37,18 @@ public class ProfileAction extends Action {
             return mapping.findForward("failure");
         }
 
-        request.setAttribute("posts", postDAO.getPostsByUserId(viewedUser.getId()));
+        // Lấy thông báo lỗi từ session nếu có
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            request.setAttribute("error", error);
+            session.removeAttribute("error"); // Xóa sau khi sử dụng
+        }
+
+        // Chỉ lấy danh sách bài viết nếu chưa có trong request
+        if (request.getAttribute("posts") == null) {
+            request.setAttribute("posts", postDAO.getPostsByUserId(viewedUser.getId()));
+        }
+
         int postCount = postDAO.getPostCountByUserId(viewedUser.getId());
         int followingCount = followDAO.getFollowingCount(viewedUser.getId());
         int followerCount = followDAO.getFollowerCount(viewedUser.getId());

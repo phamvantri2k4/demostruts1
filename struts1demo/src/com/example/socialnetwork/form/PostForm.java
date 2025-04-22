@@ -3,9 +3,10 @@ package com.example.socialnetwork.form;
 import org.apache.struts.action.ActionForm;
 
 public class PostForm extends ActionForm {
-    private String id; // Thêm id để lưu ID bài viết
+    private String id;
     private String title;
     private String body;
+    private String source; // Thêm trường source
 
     public PostForm() {
     }
@@ -32,5 +33,13 @@ public class PostForm extends ActionForm {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

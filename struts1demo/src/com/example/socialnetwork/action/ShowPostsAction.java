@@ -12,6 +12,7 @@ import com.example.socialnetwork.dao.PostDAO;
 import com.example.socialnetwork.dao.UserDAO;
 import com.example.socialnetwork.model.User;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShowPostsAction extends Action {
     @Override
@@ -28,19 +29,29 @@ public class ShowPostsAction extends Action {
         PostDAO postDAO = new PostDAO();
         FollowDAO followDAO = new FollowDAO();
 
-        // Lấy thông tin người dùng hiện tại
         User currentUser = userDAO.getUserByUsername(username);
         if (currentUser == null) {
             return mapping.findForward("login");
         }
 
-        // Lấy danh sách tất cả bài viết
-        request.setAttribute("posts", postDAO.getAllPosts());
+        // Lấy thông báo lỗi từ session nếu có
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            request.setAttribute("error", error);
+            session.removeAttribute("error"); // Xóa sau khi sử dụng
+        }
+
+        // Chỉ lấy danh sách bài viết nếu chưa có trong request
+        if (request.getAttribute("posts") == null) {
+            request.setAttribute("posts", postDAO.getAllPosts());
+        }
 
         // Lấy danh sách tất cả người dùng và loại bỏ người dùng hiện tại
         List<User> allUsers = userDAO.getAllUsers();
-        allUsers.removeIf(user -> user.getUsername().equals(username));
-        request.setAttribute("users", allUsers);
+        List<User> filteredUsers = allUsers.stream()
+            .filter(user -> !user.getUsername().equals(username))
+            .collect(Collectors.toList());
+        request.setAttribute("users", filteredUsers);
 
         // Lấy danh sách người dùng mà người dùng hiện tại đang theo dõi
         session.setAttribute("followedUsers", followDAO.getFollowedUsers(currentUser.getId()));

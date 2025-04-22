@@ -32,7 +32,7 @@
 <body>
      <div class="header">
         <div class="header-left">
-            <a href="index.do" class="login-link">Trang chủ</a>
+            <a href="index.do" class="login-link">Trang Chủ</a>
         </div>
         <div class="header-right">
             <a href="profile.do" class="profile-link" style="color: black; text-decoration: none; margin-right: 15px;">
@@ -67,12 +67,13 @@
                 <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
             </div>
             <div class="form-container">
-                <html:form action="/doCreatePost">
-                    <html:text property="title" value=""/>
-                    <html:textarea property="body" value=""/>
-                    <html:submit value="Đăng"/>
-                </html:form>
-            </div>
+    	<html:form action="/doCreatePost">
+        <html:hidden property="source" value="profile"/>
+        <html:text property="title" value=""/>
+        <html:textarea property="body" value=""/>
+        <html:submit value="Đăng"/>
+    	</html:form>
+		</div>
         </c:if>
 
         <div class="post-list">
@@ -96,10 +97,10 @@
                             <div class="action-menu" id="menu-${post.id}">
                                 <button class="menu-button" onclick="toggleMenu(${post.id})">⋮</button>
                                 <div class="dropdown">
-                                    <a href="editPost.do?id=${post.id}">Sửa</a>
-                                    <a href="deletePost.do?id=${post.id}" class="delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</a>
-                                </div>
-                            </div>
+    								<a href="editPost.do?id=${post.id}&source=profile">Sửa</a>
+    								<a href="deletePost.do?id=${post.id}&source=profile" class="delete" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</a>
+								</div>                            
+							</div>
                         </c:if>
                     </div>
                 </c:forEach>
